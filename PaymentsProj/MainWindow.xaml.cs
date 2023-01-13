@@ -34,10 +34,12 @@ namespace PaymentsProj
             var application = new Excel.Application();
             application.Visible = true;
 
-            application.SheetsInNewWorkbook = allUsers.Count();
+
 
             Excel.Workbook workbook = application.Workbooks.Add(Type.Missing);
-            for(int i =0; i< allUsers.Count();i++)
+            application.SheetsInNewWorkbook = allUsers.Count();
+            //Цикл перебирает листы книги
+            for (int i = 0; i < allUsers.Count(); i++)
             {
                 int startRowIndex = 1;
                 Excel.Worksheet worksheet = application.Worksheets.Item[i + 1];
@@ -52,9 +54,55 @@ namespace PaymentsProj
                 startRowIndex++;
 
                 var usersCategories = allUsers[i].Payment.OrderBy(p => p.date_payment).GroupBy(p => p.Category).OrderBy(p => p.Key.name_category);
+                //
+                foreach (var groupCategory in usersCategories)
+                {
+                    Excel.Range headerRange = worksheet.Range[worksheet.Cells[1][startRowIndex], worksheet.Cells[5][startRowIndex]];
+                    headerRange.Merge();
+                    headerRange.Value = groupCategory.Key.name_category;
+                    headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                    headerRange.Font.Italic = true;
+
+                    startRowIndex++;
+                    //Цикл, поробегающий по оплате
+                    foreach (var payment in groupCategory)
+                    {
+                        worksheet.Cells[1][startRowIndex] = payment.date_payment.ToString();
+
+                        worksheet.Cells[2][startRowIndex] = payment.name;
+                        worksheet.Cells[3][startRowIndex] = payment.price;
+                        worksheet.Cells[4][startRowIndex] = payment.count;
+                        worksheet.Cells[5][startRowIndex].Formula = $"=C{startRowIndex}*D{startRowIndex}";
 
 
+
+
+                        startRowIndex++;
+
+                    }
+                    Excel.Range sumRange = worksheet.Range[worksheet.Cells[1][startRowIndex], worksheet.Cells[4][startRowIndex]];
+                    sumRange.Merge();
+                    sumRange.Value = "ИТОГО: ";
+                    sumRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                    worksheet.Cells[5][startRowIndex].Formula=$"=SUM(E{startRowIndex-groupCategory.Count()}:" +$"E{startRowIndex - 1}";
+                    sumRange.Font.Bold = worksheet.Cells[5][startRowIndex].Font.Bold = true;
+                    
+
+                    startRowIndex++;
+
+                    Excel.Range rangeBorders = worksheet.Range[worksheet.Cells[1][1], worksheet.Cells[5][startRowIndex - 1]];
+                    rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle =
+                    rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle =
+                    rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle =
+                    rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle =
+                    rangeBorders.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle =
+                    rangeBorders.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
+
+                    worksheet.Columns.AutoFit();
+
+                }
             }
+            
         }
     }
 }
