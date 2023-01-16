@@ -9,11 +9,21 @@
       Title="AuthPage">
 
     <Grid>
-        <StackPanel VerticalAlignment="Center">
+        <StackPanel VerticalAlignment="Center" Margin="75">
             <TextBlock Text="Авторизация" HorizontalAlignment="Center" FontSize="20"/>
-            <ComboBox Width="250" Margin="10" Name="UsersComboBox"/>
-            <PasswordBox Width="250" Margin="5"/>
-            <Button Width="230" Height="30" Content="Войти" Margin="5" Name="AuthButton"/>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="Имя пользователя" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <ComboBox Width="250" Margin="10" Name="UsersComboBox"/></StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <TextBlock Text="Пароль" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <PasswordBox Width="250" Margin="5"/>
+            </StackPanel>
+           
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Width="150" Height="30" Content="Войти" Margin="5" Name="AuthButton" Click="AuthButtonClick"/>
+                <Button Width="150" Height="30" Content="Выход"/>
+            </StackPanel>
+            
         </StackPanel>
     </Grid>
 </Page>

@@ -14,10 +14,14 @@ namespace PaymentsProj
     /// </summary>
     public partial class MainWindow : Window
     {
+        
         Core db = new Core();
         public MainWindow()
         {
+            
             InitializeComponent();
+             
+         
             ChartPayments.ChartAreas.Add(new ChartArea("Main"));
             var currentSeries = new Series("Payments")
             {
@@ -28,6 +32,7 @@ namespace PaymentsProj
             ComboUsers.DisplayMemberPath = "last_name";
             ComboUsers.SelectedValuePath = "id_user";
             ComboChartTypes.ItemsSource = Enum.GetValues(typeof(SeriesChartType));
+            
         }
 
         private void ButtonClick(object sender, RoutedEventArgs e)
@@ -123,7 +128,9 @@ namespace PaymentsProj
                 {
                     currentSeries.Points.AddXY(category.name_category, db.context.Payment.ToList().Where(p => p.user_id == idCurrentUser && p.Category == category).Sum(p => p.price * p.count));
                 }
+               
             }
+            
         }
     }
 }

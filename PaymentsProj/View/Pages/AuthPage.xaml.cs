@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaymentsProj.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,11 +19,29 @@ namespace PaymentsProj.View.Pages
     /// <summary>
     /// Логика взаимодействия для AuthPage.xaml
     /// </summary>
+    
     public partial class AuthPage : Page
     {
+        Core db = new Core();
         public AuthPage()
         {
             InitializeComponent();
+            
         }
+
+      
+
+        private void AuthButtonClick(object sender, RoutedEventArgs e)
+        {
+            var allUsers = db.context.Users.ToList().OrderBy(p => p.last_name).ToList();
+
+         
+
+            for (int i = 0; i < allUsers.Count(); i++)
+            {
+
+                UsersComboBox.Items.Add(allUsers[i]);
+            }
+            }
     }
 }
