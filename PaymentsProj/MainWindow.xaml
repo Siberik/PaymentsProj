@@ -3,10 +3,38 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PaymentsProj"
+        xmlns:wf="clr-namespace:System.Windows.Forms;assembly=System.Windows.Forms"
+xmlns:charts="clr-namespace:System.Windows.Forms.DataVisualization.Charting;assembly=System.Windows.Forms.DataVisualization"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <Button Content="Отчет" Click="ButtonClick"/>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" HorizontalAlignment="Center">
+            
+            <StackPanel Orientation="Horizontal">
+               
+                <TextBlock Text="Пользователь" Width="125" Margin="5" VerticalAlignment="Center" TextAlignment="Right"/>
+                <ComboBox Name="ComboUsers" SelectionChanged="UpdateChart" SelectedIndex="0" Width="175" Margin="5" DisplayMemberPath="FIO"></ComboBox>
+                <TextBlock Text="Тип диаграммы:" Width="125" Margin="5" VerticalAlignment="Center" TextAlignment="Right"/>
+                <ComboBox Name="ComboChartTypes" SelectionChanged="UpdateChart" SelectedIndex="0" Width="175" Margin="5"></ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="Экспорт в Excel" VerticalAlignment="Center" Click="ButtonClick" Width="175" Margin="5" Name="BtnExportToExcel"/>
+            </StackPanel>
+        </StackPanel>
+        <WindowsFormsHost Grid.Row="1" Margin="5">
+            <charts:Chart x:Name="ChartPayments">
+                <charts:Chart.Legends>
+                <charts:Legend>
+                    
+                </charts:Legend>
+            </charts:Chart.Legends>
+            </charts:Chart>
+            
+        </WindowsFormsHost>
     </Grid>
 </Window>

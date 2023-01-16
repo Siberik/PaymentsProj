@@ -104,5 +104,12 @@ namespace PaymentsProj
             }
             
         }
+
+      
+
+        private void UpdateChart(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }
