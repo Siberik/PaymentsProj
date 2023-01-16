@@ -18,7 +18,7 @@ xmlns:charts="clr-namespace:System.Windows.Forms.DataVisualization.Charting;asse
             <StackPanel Orientation="Horizontal">
                
                 <TextBlock Text="Пользователь" Width="125" Margin="5" VerticalAlignment="Center" TextAlignment="Right"/>
-                <ComboBox Name="ComboUsers" SelectionChanged="UpdateChart" SelectedIndex="0" Width="175" Margin="5" DisplayMemberPath="FIO"></ComboBox>
+                <ComboBox Name="ComboUsers" SelectionChanged="UpdateChart" Width="175" Margin="5" DisplayMemberPath="FIO"></ComboBox>
                 <TextBlock Text="Тип диаграммы:" Width="125" Margin="5" VerticalAlignment="Center" TextAlignment="Right"/>
                 <ComboBox Name="ComboChartTypes" SelectionChanged="UpdateChart" SelectedIndex="0" Width="175" Margin="5"></ComboBox>
             </StackPanel>

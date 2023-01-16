@@ -1,19 +1,12 @@
-﻿using PaymentsProj.Model;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using PaymentsProj.Model;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Forms.DataVisualization.Charting;
 using Excel = Microsoft.Office.Interop.Excel;
+
 namespace PaymentsProj
 {
     /// <summary>
@@ -25,6 +18,16 @@ namespace PaymentsProj
         public MainWindow()
         {
             InitializeComponent();
+            ChartPayments.ChartAreas.Add(new ChartArea("Main"));
+            var currentSeries = new Series("Payments")
+            {
+                IsValueShownAsLabel = true
+            };
+            ChartPayments.Series.Add(currentSeries);
+            ComboUsers.ItemsSource = db.context.Users.ToList();
+            ComboUsers.DisplayMemberPath = "last_name";
+            ComboUsers.SelectedValuePath = "id_user";
+            ComboChartTypes.ItemsSource = Enum.GetValues(typeof(SeriesChartType));
         }
 
         private void ButtonClick(object sender, RoutedEventArgs e)
@@ -84,9 +87,9 @@ namespace PaymentsProj
                     sumRange.Merge();
                     sumRange.Value = "ИТОГО: ";
                     sumRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
-                    worksheet.Cells[5][startRowIndex].Formula=$"=SUM(E{startRowIndex-groupCategory.Count()}:" +$"E{startRowIndex - 1}";
+                    worksheet.Cells[5][startRowIndex].Formula = $"=SUM(E{startRowIndex - groupCategory.Count()}:" + $"E{startRowIndex - 1}";
                     sumRange.Font.Bold = worksheet.Cells[5][startRowIndex].Font.Bold = true;
-                    
+
 
                     startRowIndex++;
 
@@ -102,14 +105,25 @@ namespace PaymentsProj
 
                 }
             }
-            
+
         }
 
-      
+
 
         private void UpdateChart(object sender, SelectionChangedEventArgs e)
         {
-
+            int idCurrentUser = Convert.ToInt32(ComboUsers.SelectedValue);
+            if (idCurrentUser!=null && ComboChartTypes.SelectedItem is SeriesChartType currentType)
+            {
+                Series currentSeries = ChartPayments.Series.FirstOrDefault();
+                currentSeries.ChartType = currentType;
+                currentSeries.Points.Clear();
+                var categoriesList = db.context.Category.ToList();
+                foreach (var category in categoriesList)
+                {
+                    currentSeries.Points.AddXY(category.name_category, db.context.Payment.ToList().Where(p => p.user_id == idCurrentUser && p.Category == category).Sum(p => p.price * p.count));
+                }
+            }
         }
     }
 }
