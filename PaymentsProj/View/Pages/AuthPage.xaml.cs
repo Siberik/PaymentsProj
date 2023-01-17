@@ -33,15 +33,19 @@ namespace PaymentsProj.View.Pages
 
         private void AuthButtonClick(object sender, RoutedEventArgs e)
         {
-            var allUsers = db.context.Users.ToList().OrderBy(p => p.last_name).ToList();
+            var loginUsers = db.context.Users.OrderBy(p => p.login).ToList();
 
-         
-
-            for (int i = 0; i < allUsers.Count(); i++)
+            for (int i = 0; i < loginUsers.Count; i++)
             {
-
-                UsersComboBox.Items.Add(allUsers[i]);
+                UsersComboBox.Items.Add(loginUsers[i]);
             }
+
+
+            
+
+
+
+           }
             }
     }
-}
+
