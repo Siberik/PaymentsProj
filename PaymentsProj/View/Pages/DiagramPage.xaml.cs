@@ -122,7 +122,7 @@ namespace PaymentsProj.View.Pages
             int idCurrentUser = Convert.ToInt32(ComboUsers.SelectedValue);
             if ( ComboChartTypes.SelectedItem is SeriesChartType currentType)
             {
-                Series currentSeries = ChartPayments.Series.FirstOrDefault();
+                Series currentSeries =ChartPayments.Series.FirstOrDefault();
                 currentSeries.ChartType = currentType;
                 currentSeries.Points.Clear();
                 var categoriesList = db.context.Category.ToList();

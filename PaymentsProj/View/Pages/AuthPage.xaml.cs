@@ -37,7 +37,11 @@ namespace PaymentsProj.View.Pages
 
         private void AuthButtonClick(object sender, RoutedEventArgs e)
         {
-            Users currentUser = db.context.Users.Where(x =>x.password==UserPasswordBox.Password&&x.login==UsersComboBox.SelectedValue.ToString()).FirstOrDefault();
+          
+           
+
+            var selectPassword = UserPasswordBox.Password;
+            Users currentUser = db.context.Users.Where(x => x.login == UsersComboBox.Text).Where(x =>x.password==selectPassword).FirstOrDefault();
             if (currentUser != null) {
                 App.CurrentUser = currentUser;
                 this.NavigationService.Navigate(new DiagramPage());
