@@ -1,4 +1,5 @@
-﻿using PaymentsProj.Model;
+﻿using Microsoft.VisualBasic.ApplicationServices;
+using PaymentsProj.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using System.Windows.Forms.DataVisualization.Charting;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -26,6 +28,8 @@ namespace PaymentsProj.View.Pages
         public AuthPage()
         {
             InitializeComponent();
+            UsersComboBox.ItemsSource = db.context.Users.ToList();
+            UsersComboBox.DisplayMemberPath = "login";
             
         }
 
@@ -33,19 +37,12 @@ namespace PaymentsProj.View.Pages
 
         private void AuthButtonClick(object sender, RoutedEventArgs e)
         {
-            var loginUsers = db.context.Users.OrderBy(p => p.login).ToList();
-
-            for (int i = 0; i < loginUsers.Count; i++)
-            {
-                UsersComboBox.Items.Add(loginUsers[i]);
+            Users currentUser = db.context.Users.Where(x =>x.password==UserPasswordBox.Password&&x.login==UsersComboBox.SelectedValue.ToString()).FirstOrDefault();
+            if (currentUser != null) {
+                App.CurrentUser = currentUser;
+                this.NavigationService.Navigate(new DiagramPage());
             }
-
-
-            
-
-
-
-           }
-            }
+        }
+       }
     }
 

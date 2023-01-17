@@ -120,7 +120,7 @@ namespace PaymentsProj.View.Pages
         private void UpdateChart(object sender, SelectionChangedEventArgs e)
         {
             int idCurrentUser = Convert.ToInt32(ComboUsers.SelectedValue);
-            if (idCurrentUser != null && ComboChartTypes.SelectedItem is SeriesChartType currentType)
+            if ( ComboChartTypes.SelectedItem is SeriesChartType currentType)
             {
                 Series currentSeries = ChartPayments.Series.FirstOrDefault();
                 currentSeries.ChartType = currentType;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaymentsProj.Model;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,6 @@ namespace PaymentsProj
     /// </summary>
     public partial class App : Application
     {
+        public static Users CurrentUser=null;
     }
 }
