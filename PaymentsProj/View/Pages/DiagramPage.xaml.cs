@@ -38,11 +38,13 @@ namespace PaymentsProj.View.Pages
             ComboUsers.DisplayMemberPath = "last_name";
             ComboUsers.SelectedValuePath = "id_user";
             ComboChartTypes.ItemsSource = Enum.GetValues(typeof(SeriesChartType));
+            
         }
 
         private void ButtonClick(object sender, RoutedEventArgs e)
         {
-            var allUsers = db.context.Users.ToList().OrderBy(p => p.last_name).ToList();
+            //var allUsers = db.context.Users.ToList().OrderBy(p => p.last_name).ToList();
+            Users allUsers = App.CurrentUser;
 
             var application = new Excel.Application();
             application.Visible = true;
@@ -50,13 +52,16 @@ namespace PaymentsProj.View.Pages
 
 
             Excel.Workbook workbook = application.Workbooks.Add(Type.Missing);
-            application.SheetsInNewWorkbook = allUsers.Count();
+           // application.SheetsInNewWorkbook = allUsers.Count();
+            application.SheetsInNewWorkbook = 1;
             //Цикл перебирает листы книги
-            for (int i = 0; i < allUsers.Count(); i++)
-            {
+            //for (int i = 0; i < allUsers.Count(); i++)
+            //{
                 int startRowIndex = 1;
-                Excel.Worksheet worksheet = application.Worksheets.Item[i + 1];
-                worksheet.Name = allUsers[i].last_name;
+            //Excel.Worksheet worksheet = application.Worksheets.Item[i + 1];
+            Excel.Worksheet worksheet = workbook.ActiveSheet;
+            //worksheet.Name = allUsers[i].last_name;
+            worksheet.Name = allUsers.last_name;
 
                 worksheet.Cells[1][startRowIndex] = "Дата платежа";
                 worksheet.Cells[2][startRowIndex] = "Название";
@@ -66,7 +71,8 @@ namespace PaymentsProj.View.Pages
 
                 startRowIndex++;
 
-                var usersCategories = allUsers[i].Payment.OrderBy(p => p.date_payment).GroupBy(p => p.Category).OrderBy(p => p.Key.name_category);
+                //var usersCategories = allUsers[i].Payment.OrderBy(p => p.date_payment).GroupBy(p => p.Category).OrderBy(p => p.Key.name_category);
+                var usersCategories = allUsers.Payment.OrderBy(p => p.date_payment).GroupBy(p => p.Category).OrderBy(p => p.Key.name_category);
                 //
                 foreach (var groupCategory in usersCategories)
                 {
@@ -113,16 +119,19 @@ namespace PaymentsProj.View.Pages
 
                     worksheet.Columns.AutoFit();
 
-                }
+                //}
             }
         }
 
         private void UpdateChart(object sender, SelectionChangedEventArgs e)
         {
+            
+            ComboUsers.Text = App.CurrentUser.last_name;
             int idCurrentUser = Convert.ToInt32(ComboUsers.SelectedValue);
+            
             if ( ComboChartTypes.SelectedItem is SeriesChartType currentType)
             {
-                Series currentSeries =ChartPayments.Series.FirstOrDefault();
+                Series currentSeries = ChartPayments.Series.FirstOrDefault();
                 currentSeries.ChartType = currentType;
                 currentSeries.Points.Clear();
                 var categoriesList = db.context.Category.ToList();
