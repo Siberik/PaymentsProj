@@ -27,6 +27,7 @@ namespace PaymentsProj.Model
     
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<Payment> Payment { get; set; }
+        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
         public virtual DbSet<Users> Users { get; set; }
     }
 }

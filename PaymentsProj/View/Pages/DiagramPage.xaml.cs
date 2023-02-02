@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Excel = Microsoft.Office.Interop.Excel;
+using Word = Microsoft.Office.Interop.Word;
 
 namespace PaymentsProj.View.Pages
 {
@@ -147,7 +148,49 @@ namespace PaymentsProj.View.Pages
 
         private void ExportWordButtonClick(object sender, RoutedEventArgs e)
         {
-            var allUsers=
+            var allUsers = db.context.Users.ToList();
+            var allCategories = db.context.Category.ToList();
+
+            var application = new Word.Application();
+            application.Visible = true;
+
+            Word.Document document = application.Documents.Add();
+
+            foreach(var user in allUsers)
+            {
+                Word.Paragraph userParagrapth = document.Paragraphs.Add();
+                Word.Range userRange = userParagrapth.Range;
+                userRange.Text = user.last_name;
+                userParagrapth.set_Style("Заголовок");
+                userRange.InsertParagraphAfter();
+
+                Word.Paragraph tableParagraph = document.Paragraphs.Add();
+                Word.Range tableRange = tableParagraph.Range;
+                Word.Table paymentsTable = document.Tables.Add(tableRange, allCategories.Count() + 1, 3);
+                paymentsTable.Borders.InsideLineStyle = paymentsTable.Borders.OutsideLineStyle = Word.WdLineStyle.wdLineStyleSingle;
+                paymentsTable.Range.Cells.VerticalAlignment = Word.WdCellVerticalAlignment.wdCellAlignVerticalCenter;
+
+                Word.Range cellRange;
+
+
+                cellRange = paymentsTable.Cell(1, 1).Range;
+                cellRange.Text = "Иконка";
+                cellRange = paymentsTable.Cell(1, 2).Range;
+                cellRange.Text = "Категория";
+                cellRange = paymentsTable.Cell(1, 3).Range;
+                cellRange.Text = "Сумма расходов";
+
+                paymentsTable.Rows[1].Range.Bold = 1;
+                paymentsTable.Rows[1].Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+
+                for (int i = 0; i < allCategories.Count(); i++)
+                {
+                    var currentCategory = allCategories[i];
+
+                    cellRange = paymentsTable.Cell(i + 2, 1).Range;
+                    Word.InlineShape imageShape = cellRange.InlineShapes.AddPicture(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\" + currentCategory.icon_category);
+                }
+            }
         }
     }
 }
