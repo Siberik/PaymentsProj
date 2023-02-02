@@ -184,6 +184,12 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Assets\images\car.png" />
+    <Resource Include="Assets\images\food.png" />
+    <Resource Include="Assets\images\house.png" />
+    <Resource Include="Assets\images\medical.png" />
+    <Resource Include="Assets\images\sport.png" />
+    <Resource Include="Assets\images\sundry.png" />
     <Content Include="Model\Model1.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Model1.Context.cs</LastGenOutput>

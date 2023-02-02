@@ -142,5 +142,12 @@ namespace PaymentsProj.View.Pages
 
             }
         }
+
+       
+
+        private void ExportWordButtonClick(object sender, RoutedEventArgs e)
+        {
+            var allUsers=
+        }
     }
 }
