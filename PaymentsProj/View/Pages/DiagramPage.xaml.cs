@@ -1,6 +1,7 @@
 ﻿using PaymentsProj.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -182,13 +183,58 @@ namespace PaymentsProj.View.Pages
 
                 paymentsTable.Rows[1].Range.Bold = 1;
                 paymentsTable.Rows[1].Range.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
-
-                for (int i = 0; i < allCategories.Count(); i++)
+                int i = 0;
+                foreach (var item in allCategories)
                 {
-                    var currentCategory = allCategories[i];
+                    Category currentCategory = item;
 
                     cellRange = paymentsTable.Cell(i + 2, 1).Range;
-                    Word.InlineShape imageShape = cellRange.InlineShapes.AddPicture(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\" + currentCategory.icon_category);
+                    if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\"))
+                    {
+
+                        string puth = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\";
+                        if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\" + currentCategory.icon_category))
+                    {
+
+                            Word.InlineShape imageShape = cellRange.InlineShapes.AddPicture(puth);
+                            imageShape.Width = imageShape.Height = 40;
+                            cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+
+                            cellRange = paymentsTable.Cell(i + 2, 2).Range;
+                            cellRange.Text = currentCategory.name_category;
+
+                            cellRange = paymentsTable.Cell(i + 2, 3).Range;
+                            cellRange.Text = user.Payment.ToList().Where(p => p.Category == currentCategory).Sum(p => p.count * p.price).ToString() + "руб.";
+                        }
+                    }
+                }
+                //for (int i = 0; i < allCategories.Count(); i++)
+                //{
+                //    Category currentCategory = allCategories[i];
+
+                //    cellRange = paymentsTable.Cell(i + 2, 1).Range;
+                //    string puth = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\";
+                //    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\" + currentCategory.icon_category;))
+                //    {
+                    
+                //    Word.InlineShape imageShape = cellRange.InlineShapes.AddPicture(puth);
+                //    imageShape.Width = imageShape.Height = 40;
+                //    cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
+
+                //    cellRange = paymentsTable.Cell(i + 2, 2).Range;
+                //    cellRange.Text = currentCategory.name_category;
+
+                //    cellRange = paymentsTable.Cell(i + 2, 3).Range;
+                //    cellRange.Text = user.Payment.ToList().Where(p => p.Category == currentCategory).Sum(p => p.count * p.price).ToString() + "руб.";
+                //    }
+                    
+                //}
+                Payment maxPayment = user.Payment.OrderByDescending(p => p.price * p.count).FirstOrDefault();
+                if (maxPayment!=null)
+                {
+                    Word.Paragraph maxPaymentParagraph = document.Paragraphs.Add();
+                    Word.Range maxPaymentRange = maxPaymentParagraph.Range;
+                maxPaymentRange.Text=$"Самый дорогостоящий платеж - {maxPayment.name} за {(maxPayment.price*maxPayment.count).ToString()}"+ $"руб. от {maxPayment.date_payment.Value.ToString("dd.MM.yyyy")}";
                 }
             }
         }
