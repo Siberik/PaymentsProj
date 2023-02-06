@@ -235,7 +235,25 @@ namespace PaymentsProj.View.Pages
                     Word.Paragraph maxPaymentParagraph = document.Paragraphs.Add();
                     Word.Range maxPaymentRange = maxPaymentParagraph.Range;
                 maxPaymentRange.Text=$"Самый дорогостоящий платеж - {maxPayment.name} за {(maxPayment.price*maxPayment.count).ToString()}"+ $"руб. от {maxPayment.date_payment.Value.ToString("dd.MM.yyyy")}";
+                    maxPaymentParagraph.set_Style("Intense Quote");
+                    maxPaymentRange.Font.Color = Word.WdColor.wdColorDarkRed;
+                    maxPaymentRange.InsertParagraphAfter();
                 }
+
+                Payment minPayment = user.Payment.OrderBy(p => p.price * p.count).FirstOrDefault();
+                if (minPayment!=null)
+                {
+                    Word.Paragraph minPaymentParagraph = document.Paragraphs.Add();
+                    Word.Range minPaymentRange = minPaymentParagraph.Range;
+                    minPaymentRange.Text = $"Самый дешевый платеж - {minPayment.name} за {(minPayment.price * minPayment.count).Value.ToString("N2")}" + $"руб. от {minPayment.date_payment.Value.ToString("dd.MM.yyyy")}";
+                    minPaymentParagraph.set_Style("Intense Quote");
+                    minPaymentRange.Font.Color = Word.WdColor.wdColorDarkGreen;
+                }
+                if (user!=allUsers.LastOrDefault())
+                {
+                    document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+                }
+                
             }
         }
     }
