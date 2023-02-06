@@ -40,7 +40,7 @@ namespace PaymentsProj.View.Pages
             ComboUsers.DisplayMemberPath = "last_name";
             ComboUsers.SelectedValuePath = "id_user";
             ComboChartTypes.ItemsSource = Enum.GetValues(typeof(SeriesChartType));
-            
+
         }
 
         private void ButtonClick(object sender, RoutedEventArgs e)
@@ -54,72 +54,72 @@ namespace PaymentsProj.View.Pages
 
 
             Excel.Workbook workbook = application.Workbooks.Add(Type.Missing);
-           // application.SheetsInNewWorkbook = allUsers.Count();
+            // application.SheetsInNewWorkbook = allUsers.Count();
             application.SheetsInNewWorkbook = 1;
             //Цикл перебирает листы книги
             //for (int i = 0; i < allUsers.Count(); i++)
             //{
-                int startRowIndex = 1;
+            int startRowIndex = 1;
             //Excel.Worksheet worksheet = application.Worksheets.Item[i + 1];
             Excel.Worksheet worksheet = workbook.ActiveSheet;
             //worksheet.Name = allUsers[i].last_name;
-            worksheet.Name = allUsers.last_name;
+            worksheet.Name = allUsers.last_name+ allUsers.first_name +allUsers.patronymic_name;
 
-                worksheet.Cells[1][startRowIndex] = "Дата платежа";
-                worksheet.Cells[2][startRowIndex] = "Название";
-                worksheet.Cells[3][startRowIndex] = "Стоимость";
-                worksheet.Cells[4][startRowIndex] = "Количество";
-                worksheet.Cells[5][startRowIndex] = "Сумма";
+            worksheet.Cells[1][startRowIndex] = "Дата платежа";
+            worksheet.Cells[2][startRowIndex] = "Название";
+            worksheet.Cells[3][startRowIndex] = "Стоимость";
+            worksheet.Cells[4][startRowIndex] = "Количество";
+            worksheet.Cells[5][startRowIndex] = "Сумма";
+
+            startRowIndex++;
+
+            //var usersCategories = allUsers[i].Payment.OrderBy(p => p.date_payment).GroupBy(p => p.Category).OrderBy(p => p.Key.name_category);
+            var usersCategories = allUsers.Payment.OrderBy(p => p.date_payment).GroupBy(p => p.Category).OrderBy(p => p.Key.name_category);
+            //
+            foreach (var groupCategory in usersCategories)
+            {
+                Excel.Range headerRange = worksheet.Range[worksheet.Cells[1][startRowIndex], worksheet.Cells[5][startRowIndex]];
+                headerRange.Merge();
+                headerRange.Value = groupCategory.Key.name_category;
+                headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+                headerRange.Font.Italic = true;
+
+                startRowIndex++;
+                //Цикл, поробегающий по оплате
+                foreach (var payment in groupCategory)
+                {
+                    worksheet.Cells[1][startRowIndex] = payment.date_payment.ToString();
+
+                    worksheet.Cells[2][startRowIndex] = payment.name;
+                    worksheet.Cells[3][startRowIndex] = payment.price;
+                    worksheet.Cells[4][startRowIndex] = payment.count;
+                    worksheet.Cells[5][startRowIndex].Formula = $"=C{startRowIndex}*D{startRowIndex}";
+
+
+
+
+                    startRowIndex++;
+
+                }
+                Excel.Range sumRange = worksheet.Range[worksheet.Cells[1][startRowIndex], worksheet.Cells[4][startRowIndex]];
+                sumRange.Merge();
+                sumRange.Value = "ИТОГО: ";
+                sumRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
+                worksheet.Cells[5][startRowIndex].Formula = $"=SUM(E{startRowIndex - groupCategory.Count()}:" + $"E{startRowIndex - 1}";
+                sumRange.Font.Bold = worksheet.Cells[5][startRowIndex].Font.Bold = true;
+
 
                 startRowIndex++;
 
-                //var usersCategories = allUsers[i].Payment.OrderBy(p => p.date_payment).GroupBy(p => p.Category).OrderBy(p => p.Key.name_category);
-                var usersCategories = allUsers.Payment.OrderBy(p => p.date_payment).GroupBy(p => p.Category).OrderBy(p => p.Key.name_category);
-                //
-                foreach (var groupCategory in usersCategories)
-                {
-                    Excel.Range headerRange = worksheet.Range[worksheet.Cells[1][startRowIndex], worksheet.Cells[5][startRowIndex]];
-                    headerRange.Merge();
-                    headerRange.Value = groupCategory.Key.name_category;
-                    headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
-                    headerRange.Font.Italic = true;
+                Excel.Range rangeBorders = worksheet.Range[worksheet.Cells[1][1], worksheet.Cells[5][startRowIndex - 1]];
+                rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle =
+                rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle =
+                rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle =
+                rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle =
+                rangeBorders.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle =
+                rangeBorders.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
 
-                    startRowIndex++;
-                    //Цикл, поробегающий по оплате
-                    foreach (var payment in groupCategory)
-                    {
-                        worksheet.Cells[1][startRowIndex] = payment.date_payment.ToString();
-
-                        worksheet.Cells[2][startRowIndex] = payment.name;
-                        worksheet.Cells[3][startRowIndex] = payment.price;
-                        worksheet.Cells[4][startRowIndex] = payment.count;
-                        worksheet.Cells[5][startRowIndex].Formula = $"=C{startRowIndex}*D{startRowIndex}";
-
-
-
-
-                        startRowIndex++;
-
-                    }
-                    Excel.Range sumRange = worksheet.Range[worksheet.Cells[1][startRowIndex], worksheet.Cells[4][startRowIndex]];
-                    sumRange.Merge();
-                    sumRange.Value = "ИТОГО: ";
-                    sumRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignRight;
-                    worksheet.Cells[5][startRowIndex].Formula = $"=SUM(E{startRowIndex - groupCategory.Count()}:" + $"E{startRowIndex - 1}";
-                    sumRange.Font.Bold = worksheet.Cells[5][startRowIndex].Font.Bold = true;
-
-
-                    startRowIndex++;
-
-                    Excel.Range rangeBorders = worksheet.Range[worksheet.Cells[1][1], worksheet.Cells[5][startRowIndex - 1]];
-                    rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeBottom].LineStyle =
-                    rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeLeft].LineStyle =
-                    rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeRight].LineStyle =
-                    rangeBorders.Borders[Excel.XlBordersIndex.xlEdgeTop].LineStyle =
-                    rangeBorders.Borders[Excel.XlBordersIndex.xlInsideHorizontal].LineStyle =
-                    rangeBorders.Borders[Excel.XlBordersIndex.xlInsideVertical].LineStyle = Excel.XlLineStyle.xlContinuous;
-
-                    worksheet.Columns.AutoFit();
+                worksheet.Columns.AutoFit();
 
                 //}
             }
@@ -127,11 +127,11 @@ namespace PaymentsProj.View.Pages
 
         private void UpdateChart(object sender, SelectionChangedEventArgs e)
         {
-            
+
             ComboUsers.Text = App.CurrentUser.last_name;
             int idCurrentUser = Convert.ToInt32(ComboUsers.SelectedValue);
-            
-            if ( ComboChartTypes.SelectedItem is SeriesChartType currentType)
+
+            if (ComboChartTypes.SelectedItem is SeriesChartType currentType)
             {
                 Series currentSeries = ChartPayments.Series.FirstOrDefault();
                 currentSeries.ChartType = currentType;
@@ -145,7 +145,7 @@ namespace PaymentsProj.View.Pages
             }
         }
 
-       
+
 
         private void ExportWordButtonClick(object sender, RoutedEventArgs e)
         {
@@ -153,15 +153,15 @@ namespace PaymentsProj.View.Pages
             var allCategories = db.context.Category.ToList();
 
             var application = new Word.Application();
-            application.Visible = true;
+           
 
             Word.Document document = application.Documents.Add();
 
-            foreach(var user in allUsers)
+            foreach (var user in allUsers)
             {
                 Word.Paragraph userParagrapth = document.Paragraphs.Add();
                 Word.Range userRange = userParagrapth.Range;
-                userRange.Text = user.last_name;
+                userRange.Text = $"{ user.last_name} {user.first_name} {user.patronymic_name}";
                 userParagrapth.set_Style("Заголовок");
                 userRange.InsertParagraphAfter();
 
@@ -194,9 +194,9 @@ namespace PaymentsProj.View.Pages
 
                         string puth = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\";
                         if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\" + currentCategory.icon_category))
-                    {
+                        {
 
-                            Word.InlineShape imageShape = cellRange.InlineShapes.AddPicture(puth);
+                            Word.InlineShape imageShape = cellRange.InlineShapes.AddPicture(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\" + currentCategory.icon_category);
                             imageShape.Width = imageShape.Height = 40;
                             cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
 
@@ -207,54 +207,41 @@ namespace PaymentsProj.View.Pages
                             cellRange.Text = user.Payment.ToList().Where(p => p.Category == currentCategory).Sum(p => p.count * p.price).ToString() + "руб.";
                         }
                     }
+                    i++;
                 }
-                //for (int i = 0; i < allCategories.Count(); i++)
-                //{
-                //    Category currentCategory = allCategories[i];
+              
 
-                //    cellRange = paymentsTable.Cell(i + 2, 1).Range;
-                //    string puth = AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\";
-                //    if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "..\\..\\Assets\\images\\" + currentCategory.icon_category;))
-                //    {
-                    
-                //    Word.InlineShape imageShape = cellRange.InlineShapes.AddPicture(puth);
-                //    imageShape.Width = imageShape.Height = 40;
-                //    cellRange.ParagraphFormat.Alignment = Word.WdParagraphAlignment.wdAlignParagraphCenter;
 
-                //    cellRange = paymentsTable.Cell(i + 2, 2).Range;
-                //    cellRange.Text = currentCategory.name_category;
+                    Payment maxPayment = user.Payment.OrderByDescending(p => p.price * p.count).FirstOrDefault();
+                    if (maxPayment != null)
+                    {
+                        Word.Paragraph maxPaymentParagraph = document.Paragraphs.Add();
+                        Word.Range maxPaymentRange = maxPaymentParagraph.Range;
+                        maxPaymentRange.Text = $"Самый дорогостоящий платеж - {maxPayment.name} за {(maxPayment.price * maxPayment.count).ToString()}" + $"руб. от {maxPayment.date_payment.Value.ToString("dd.MM.yyyy")}";
+                        maxPaymentParagraph.set_Style("Обычный");
+                        maxPaymentRange.Font.Color = Word.WdColor.wdColorDarkRed;
+                        maxPaymentRange.InsertParagraphAfter();
+                    }
 
-                //    cellRange = paymentsTable.Cell(i + 2, 3).Range;
-                //    cellRange.Text = user.Payment.ToList().Where(p => p.Category == currentCategory).Sum(p => p.count * p.price).ToString() + "руб.";
-                //    }
-                    
-                //}
-                Payment maxPayment = user.Payment.OrderByDescending(p => p.price * p.count).FirstOrDefault();
-                if (maxPayment!=null)
-                {
-                    Word.Paragraph maxPaymentParagraph = document.Paragraphs.Add();
-                    Word.Range maxPaymentRange = maxPaymentParagraph.Range;
-                maxPaymentRange.Text=$"Самый дорогостоящий платеж - {maxPayment.name} за {(maxPayment.price*maxPayment.count).ToString()}"+ $"руб. от {maxPayment.date_payment.Value.ToString("dd.MM.yyyy")}";
-                    maxPaymentParagraph.set_Style("Intense Quote");
-                    maxPaymentRange.Font.Color = Word.WdColor.wdColorDarkRed;
-                    maxPaymentRange.InsertParagraphAfter();
-                }
-
-                Payment minPayment = user.Payment.OrderBy(p => p.price * p.count).FirstOrDefault();
-                if (minPayment!=null)
-                {
-                    Word.Paragraph minPaymentParagraph = document.Paragraphs.Add();
-                    Word.Range minPaymentRange = minPaymentParagraph.Range;
-                    minPaymentRange.Text = $"Самый дешевый платеж - {minPayment.name} за {(minPayment.price * minPayment.count).Value.ToString("N2")}" + $"руб. от {minPayment.date_payment.Value.ToString("dd.MM.yyyy")}";
-                    minPaymentParagraph.set_Style("Intense Quote");
-                    minPaymentRange.Font.Color = Word.WdColor.wdColorDarkGreen;
-                }
-                if (user!=allUsers.LastOrDefault())
-                {
-                    document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
-                }
-                
+                    Payment minPayment = user.Payment.OrderBy(p => p.price * p.count).FirstOrDefault();
+                    if (minPayment != null)
+                    {
+                        Word.Paragraph minPaymentParagraph = document.Paragraphs.Add();
+                        Word.Range minPaymentRange = minPaymentParagraph.Range;
+                        minPaymentRange.Text = $"Самый дешевый платеж - {minPayment.name} за {(minPayment.price * minPayment.count).Value.ToString("N2")}" + $"руб. от {minPayment.date_payment.Value.ToString("dd.MM.yyyy")}";
+                        minPaymentParagraph.set_Style("Обычный");
+                        minPaymentRange.Font.Color = Word.WdColor.wdColorDarkGreen;
+                    }
+                    if (user != allUsers.LastOrDefault())
+                    {
+                        document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
+                    }
+                application.Visible = true;
             }
+            }
+
         }
+
     }
-}
+
+
