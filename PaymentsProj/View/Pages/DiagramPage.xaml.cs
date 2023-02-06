@@ -146,9 +146,10 @@ namespace PaymentsProj.View.Pages
         }
 
 
-
+    
         private void ExportWordButtonClick(object sender, RoutedEventArgs e)
         {
+            
             var allUsers = db.context.Users.ToList();
             var allCategories = db.context.Category.ToList();
 
@@ -165,6 +166,7 @@ namespace PaymentsProj.View.Pages
                 userParagrapth.set_Style("Заголовок");
                 userRange.InsertParagraphAfter();
 
+               
                 Word.Paragraph tableParagraph = document.Paragraphs.Add();
                 Word.Range tableRange = tableParagraph.Range;
                 Word.Table paymentsTable = document.Tables.Add(tableRange, allCategories.Count() + 1, 3);
@@ -222,8 +224,8 @@ namespace PaymentsProj.View.Pages
                         maxPaymentRange.Font.Color = Word.WdColor.wdColorDarkRed;
                         maxPaymentRange.InsertParagraphAfter();
                     }
-
-                    Payment minPayment = user.Payment.OrderBy(p => p.price * p.count).FirstOrDefault();
+               
+                Payment minPayment = user.Payment.OrderBy(p => p.price * p.count).FirstOrDefault();
                     if (minPayment != null)
                     {
                         Word.Paragraph minPaymentParagraph = document.Paragraphs.Add();
@@ -237,8 +239,12 @@ namespace PaymentsProj.View.Pages
                         document.Words.Last.InsertBreak(Word.WdBreakType.wdPageBreak);
                     }
                 application.Visible = true;
+               // name = user.last_name;
             }
-            }
+            document.SaveAs2($"{AppDomain.CurrentDomain.BaseDirectory}\\Docs\\name.docx");
+            document.SaveAs2($"{AppDomain.CurrentDomain.BaseDirectory}\\Docs\\name.pdf", Word.WdExportFormat.wdExportFormatPDF);
+
+        }
 
         }
 
