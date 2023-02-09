@@ -46,6 +46,10 @@ namespace PaymentsProj.View.Pages
                 App.CurrentUser = currentUser;
                 this.NavigationService.Navigate(new DiagramPage());
             }
+            if (currentUser == null)
+            {
+                MessageBox.Show("Неправильный пароль");
+            }
         }
        }
     }

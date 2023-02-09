@@ -40,7 +40,8 @@ namespace PaymentsProj.View.Pages
             ComboUsers.DisplayMemberPath = "last_name";
             ComboUsers.SelectedValuePath = "id_user";
             ComboChartTypes.ItemsSource = Enum.GetValues(typeof(SeriesChartType));
-
+            
+            
         }
 
         private void ButtonClick(object sender, RoutedEventArgs e)
