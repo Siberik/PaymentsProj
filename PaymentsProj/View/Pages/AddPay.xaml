@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PaymentsProj.View.Pages"
+        xmlns:local1="clr-namespace:PaymentsProj.UsControls"
         mc:Ignorable="d"
         Title="AddPay" Height="450" Width="400">
     <Grid>
@@ -18,7 +19,7 @@
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Количество" VerticalAlignment="Center" Width="100"/>
-
+                <local1:UserTextBox/>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Цена" VerticalAlignment="Center" Width="100"/>
