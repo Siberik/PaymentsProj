@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,9 +27,24 @@ namespace PaymentsProj.UsControls
             this.DataContext = this;
         }
 
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
+        int count=0;
+        
+       
 
+
+        private void UpButton_Click(object sender, RoutedEventArgs e)
+        {
+            count=Convert.ToInt32(CountTextBox.Text);
+            count++;
+            CountTextBox.Text=count.ToString();
+        }
+
+        private void DownButton_Click(object sender, RoutedEventArgs e)
+        {
+            count = Convert.ToInt32(CountTextBox.Text);
+            count = count-1;
+            CountTextBox.Text = count.ToString();
+            
         }
     }
 }

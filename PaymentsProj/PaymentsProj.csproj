@@ -74,8 +74,8 @@
     <Compile Include="UsControls\UserTextBox.xaml.cs">
       <DependentUpon>UserTextBox.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Pages\AddPay.xaml.cs">
-      <DependentUpon>AddPay.xaml</DependentUpon>
+    <Compile Include="View\Pages\AddPayPage.xaml.cs">
+      <DependentUpon>AddPayPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Pages\AuthPage.xaml.cs">
       <DependentUpon>AuthPage.xaml</DependentUpon>
@@ -102,7 +102,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Pages\AddPay.xaml">
+    <Page Include="View\Pages\AddPayPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

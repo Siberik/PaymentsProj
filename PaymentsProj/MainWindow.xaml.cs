@@ -22,9 +22,9 @@ namespace PaymentsProj
             
 
             InitializeComponent();
-             
-         
-            MainFrame.Navigate(new AuthPage());
+
+
+            MainFrame.Navigate(new AddPayPage());
         }
 
         

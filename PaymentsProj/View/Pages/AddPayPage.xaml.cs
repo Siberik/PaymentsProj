@@ -10,20 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 namespace PaymentsProj.View.Pages
 {
     /// <summary>
-    /// Логика взаимодействия для AddPay.xaml
+    /// Логика взаимодействия для AddPayPage.xaml
     /// </summary>
-    public partial class AddPay : Window
+    public partial class AddPayPage : Page
     {
-        public AddPay()
+        public AddPayPage()
         {
             InitializeComponent();
         }
-
-       
     }
 }
